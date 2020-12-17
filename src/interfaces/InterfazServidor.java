@@ -8,11 +8,13 @@ package interfaces;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,7 +25,10 @@ import logica.FirmaDigital;
  *
  * @author maste
  */
-public class InterfazServidor {
+public class InterfazServidor extends Thread{
+    
+    FirmaDigital firmaDigital;
+    
     private JFrame ventana = new JFrame("Menú principal");
     private JPanel contenedorTitulo = new JPanel();
     private JPanel acciones = new JPanel();
@@ -47,19 +52,20 @@ public class InterfazServidor {
     InterfazServidor(){
         try {
             Registry reg=LocateRegistry.createRegistry(5347);
-            FirmaDigital firmaDigital = new FirmaDigital();
+            firmaDigital = new FirmaDigital();
             reg.rebind("firmaryguardar",firmaDigital);
                 System.out.println("Va el firmado");
             reg.rebind("cargaryverificar", firmaDigital);
                 System.out.println("Va el verificado");              
         }
-        catch (Exception e)
+        catch (RemoteException e)
         {
             System.out.println("error");
         }
     }
 
-    void init() {
+    @Override
+    public void run() {
         ventana.setBackground(Color.black);
         ventana.setLayout(layout);
         titulo.setBackground(Color.black);
@@ -71,6 +77,7 @@ public class InterfazServidor {
         buildMain();
         ventana.pack();
         ventana.setVisible(true);
+        loopVerificacion();
     }
 
     private void buildMain() {
@@ -97,7 +104,45 @@ public class InterfazServidor {
         subtit_Verificado.setFont(f_subtit);
         verificados.add(subtit_Verificado, BorderLayout.NORTH);
         
+        
+        
+        
         ventana.add(acciones,BorderLayout.CENTER);
     }
-    
+
+    private void loopVerificacion() {
+        while(true){
+            synchronized(firmaDigital){
+                try {
+                    firmaDigital.wait();
+                    if(firmaDigital.isInstanciaFirmado()){
+                        actualizarFirmado();
+                    }
+                    if(firmaDigital.isInstanciaVerificado()){
+                        actualizarVerificado();
+                    }
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(InterfazServidor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    /**
+     * Cargar en l ainterfaz una notificación que avise que se aplicó una firma digital
+     */
+    private void actualizarFirmado() {
+        firmado.repaint();
+        verificados.repaint();
+        firmado.updateUI();
+        verificados.updateUI();
+    }
+
+    /**
+     * Cargar en la aplicación una nitificación que avise que se aplicó una validación de la firma
+     */
+    private void actualizarVerificado() {
+        
+    }
+
 }

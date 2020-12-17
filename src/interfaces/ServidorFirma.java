@@ -18,7 +18,7 @@ public class ServidorFirma {
     
    public static void main(String[] args) {
        InterfazServidor sI = new InterfazServidor();
-       sI.init();
+       sI.start();
     }
     
 }

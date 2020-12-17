@@ -37,7 +37,7 @@ public class InterfazMenu {
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
     private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE), BorderFactory.createEmptyBorder(10, 10, 10, 10));
     private BorderLayout layout = new BorderLayout(5, 5);
-    
+
     public void init() {
         ventana.setBackground(Color.black);
         ventana.setLayout(layout);
@@ -74,11 +74,11 @@ public class InterfazMenu {
         botonVerificado.setBorder(bordeCompuesto);
         
         botonFirmado.addActionListener((ActionEvent ae) -> {
-            ig.init();
+            ig.start();
         });
         
         botonVerificado.addActionListener((ActionEvent ae) -> {
-            iv.init();
+            iv.start();
         });
         grupoBotones.add(botonFirmado);
         grupoBotones.add(botonVerificado);

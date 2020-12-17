@@ -33,7 +33,7 @@ import logica.CargasLlaves;
 import logica.FirmaDigital;
 import logica.InterfazFirmaDigital;
 
-class InterfazGeneracion {
+class InterfazGeneracion extends Thread{
     //elementos de back
     private PrivateKey privada;
     Registry reg;
@@ -80,8 +80,9 @@ class InterfazGeneracion {
             Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    void init() {
+    
+    @Override
+    public void run() {
         if(instanciado) return;
         instanciado = true;
         ventana.setBackground(Color.black);
@@ -125,7 +126,6 @@ class InterfazGeneracion {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try {
-                    
                     name = nombre.getText().replaceAll("\\s", "");
                     CargasLlaves.guardarKey(privada, ("LlavePrivada"+name+".key"));
                     fdF.firmaryguardar(nombre.getText(),
@@ -141,6 +141,7 @@ class InterfazGeneracion {
 
             private void mostrarConfirmacion() {
                 confirmacion.setVisible(true);
+                confirmacion.repaint();
                 confirmacion.updateUI();
                 
             }
@@ -173,14 +174,19 @@ class InterfazGeneracion {
         confirmarPDF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    fdF.firmaryguardar(nombre.getText(),
-                            Integer.parseInt(edad.getText()),
-                            mensaje.getText(),
-                            CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));//reemplazar por el .key obtenido
-                } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException ex) {
-                    Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
+                //Aquí es donde ya se manda, por lo que hay que hacer el notify
+                synchronized(fdF){
+                    try {
+                        fdF.firmaryguardar(nombre.getText(),
+                                Integer.parseInt(edad.getText()),
+                                mensaje.getText(),
+                                CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));//reemplazar por el .key obtenido
+                        fdF.notify();
+                    } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException ex) {
+                        Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+                
             }
         });
         

@@ -27,6 +27,9 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
     byte[] resumen;
     byte[] firmaBytes;
     
+    private boolean instanciaFirmado = false;
+    private boolean instanciaVerificado = false;
+    
     public FirmaDigital() throws RemoteException{
         super();
         try {
@@ -64,6 +67,7 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             System.out.println("Firma a secas:"+ firmaBytes);
             firmaLegible = new BASE64Encoder().encode(firmaBytes);
             System.out.println("Firma: "+firmaLegible);
+            instanciaFirmado = true;
         } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,9 +94,28 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             
             validado = firma.verify(firmaBytes);
             
+            instanciaVerificado = true;
         } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
         }
         return validado;
     }
+
+    public boolean isInstanciaFirmado() {
+        return instanciaFirmado;
+    }
+
+    public void setInstanciaFirmado(boolean instanciaFirmado) {
+        this.instanciaFirmado = instanciaFirmado;
+    }
+
+    public boolean isInstanciaVerificado() {
+        return instanciaVerificado;
+    }
+
+    public void setInstanciaVerificado(boolean instanciaVerificado) {
+        this.instanciaVerificado = instanciaVerificado;
+    }
+    
+    
 }

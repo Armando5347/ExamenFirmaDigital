@@ -24,7 +24,7 @@ import javax.swing.border.Border;
 import logica.FirmaDigital;
 import logica.InterfazFirmaDigital;
 
-class InterfazValidacion {
+class InterfazValidacion extends Thread{
     
     InterfazFirmaDigital fdV;
     
@@ -58,8 +58,8 @@ class InterfazValidacion {
         this.publica = publica;
         
     }
-    
-    void init() {
+    @Override
+    public void run() {
         if(instanciado) return;
         instanciado = true;
         ventana.setBackground(Color.black);
@@ -104,12 +104,16 @@ class InterfazValidacion {
         botonVerificado.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
-                    //de momento no lee pdf ni nada, y un 15 por que si
-                    fdV.cargaryverificar(new byte[15], publica);
-                } catch (RemoteException ex) {
-                    Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+                synchronized(fdV){
+                    try {
+                        //de momento no lee pdf ni nada, y un 15 por que si
+                        fdV.cargaryverificar(new byte[15], publica);
+                        fdV.notify();
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+                
             }
         });
         
