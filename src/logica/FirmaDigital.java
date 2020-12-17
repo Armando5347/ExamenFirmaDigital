@@ -6,46 +6,43 @@
 package logica;
 
 /**
- * Aquó se va firmar y validar todo
+ * Aquí se va firmar y validar todo, por parte del servidor fungiendo como un objeto remoto
  * @author maste
  */
 
 import java.io.File;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sun.misc.BASE64Encoder;
 
 
-public class FirmaDigital {
+public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDigital{
     //objetos para cifrar y descrifar como atributos
     KeyPairGenerator generador;
     KeyPair llaves;
     Signature firma;
     byte[] resumen;
     byte[] firmaBytes;
-    public FirmaDigital(){
+    
+    public FirmaDigital() throws RemoteException{
+        super();
         try {
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-            generador = KeyPairGenerator.getInstance("RSA", "BC");
-            generador.initialize(1024, new SecureRandom());
+            //generador = KeyPairGenerator.getInstance("RSA", "BC");
+            //generador.initialize(1024, new SecureRandom());
             
-            llaves = generador.genKeyPair();
+            //llaves = generador.genKeyPair();
             
-            firma = Signature.getInstance("SHA1WithRSA", "BC");
+            firma = Signature.getInstance("SHA256WithRSA", "BC");
             
         } catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public PrivateKey getPrivada(){
-        return llaves.getPrivate();
-    }
-    
-    public PublicKey getPublica(){
-        return llaves.getPublic();
-    }
     /**
      * Esté metodo se encarga de generar el pdf y firmarlo;
      * @param nombre El nombre a guardar.
@@ -53,7 +50,9 @@ public class FirmaDigital {
      * @param mensaje El mensaje a guardar
      * @param llavePrivada La llave privada con la qe se cifra la firma.
      */
-    public void firmaryguardar(String nombre, int edad, String mensaje, PrivateKey llavePrivada){
+    @Override
+    public String firmaryguardar(String nombre, int edad, String mensaje, PrivateKey llavePrivada){
+        String firmaLegible = "";
         try {
             firma.initSign(llavePrivada, new SecureRandom());
             
@@ -62,33 +61,36 @@ public class FirmaDigital {
             firma.update(resumen);
             
             firmaBytes = firma.sign();
-            
-            //new BASE64Encoder().encode(firmaBytes));
-            
-            
-            
-            System.out.println(firma.verify(firmaBytes));
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SignatureException ex) {
+            System.out.println("Firma a secas:"+ firmaBytes);
+            firmaLegible = new BASE64Encoder().encode(firmaBytes);
+            System.out.println("Firma: "+firmaLegible);
+        } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return firmaLegible;
     }
     
-    public boolean cargaryverificar(File pdf, PublicKey llavePublica){
+    
+    /**
+     * Metodo para ingresar el pdf y la llave pública del cliente para validar si este pdf es autentico.
+     * @param pdf El pdf a comparar
+     * @param llavePublica la llave pública del cliente
+     * @return true si el pdf es autentico, false de no serlo.
+     */
+    @Override
+    public boolean cargaryverificar(byte[] new_resumen, PublicKey llavePublica){
         boolean validado = false;
         try {
             
             
-            firma.initVerify(llaves.getPublic());
-            byte[] new_resumen = null; //aquí insertar la firma digital del pdf
+            firma.initVerify(llavePublica);
+            //byte[] new_resumen = null; //aquí insertar la firma digital del pdf
             firma.update(new_resumen);
             
             validado = firma.verify(firmaBytes);
             
-        } catch (InvalidKeyException ex) {
-            Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SignatureException ex) {
+        } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
         }
         return validado;
