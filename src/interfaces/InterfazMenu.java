@@ -28,16 +28,17 @@ public class InterfazMenu {
     private JPanel contenedorTitulo = new JPanel();
     private JPanel menus = new JPanel();
     
-    private Font f_tit = new Font("Verdana", Font.BOLD, 30);
-    private Font f_subtit = new Font("Verdana", Font.BOLD, 25);
-    private Font f_txt = new Font("Verdana", Font.PLAIN, 16);
+    private Font f_tit = new Font("Verdana", Font.BOLD, 50);
+    private Font f_subtit = new Font("Verdana", Font.BOLD, 35);
+    private Font f_txt = new Font("Verdana", Font.PLAIN, 25);
     private JButton botonFirmado = new JButton("Firmar un mensaje");
     private JButton botonVerificado = new JButton("Validar un pdf");
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
-    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE), BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    private BorderLayout layout = new BorderLayout(5, 5);
-
+    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE), BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    private BorderLayout layout = new BorderLayout(15, 15);
+    private Dimension minimo = new Dimension(150,60);
+    
     public void init() {
         ventana.setBackground(Color.black);
         ventana.setLayout(layout);
@@ -68,11 +69,12 @@ public class InterfazMenu {
         botonFirmado.setBackground(Color.black);
         botonFirmado.setForeground(Color.white);
         botonFirmado.setBorder(bordeCompuesto);
+        botonFirmado.setMinimumSize(minimo);
         
         botonVerificado.setBackground(Color.black);
         botonVerificado.setForeground(Color.white);
         botonVerificado.setBorder(bordeCompuesto);
-        
+        botonVerificado.setMinimumSize(minimo);
         botonFirmado.addActionListener((ActionEvent ae) -> {
             ig.start();
         });
