@@ -15,6 +15,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.security.PublicKey;
 import java.util.logging.Level;
@@ -43,8 +44,10 @@ class InterfazValidacion extends Thread{
     private JLabel labelLlavePublica = new JLabel("Ingrese la llave pública");
     private JLabel labelPDF = new JLabel("Ingrese el pdf");
     
-    private JTextField llavepublica = new JTextField();
-    private JTextField pdf = new JTextField();
+    private JTextField llavepublica  = new JTextField();
+    //private JTextField pdf           = new JTextField();
+    private JButton btn_pdf = new JButton("Elegir archivo");
+    private File pdf = null;
     
     private JButton botonVerificado = new JButton("Validar pdf");
     
@@ -94,11 +97,37 @@ class InterfazValidacion extends Thread{
         labelLlavePublica.setFont(f_txt);
         labelPDF.setFont(f_txt);
         llavepublica.setFont(f_txt);
-        pdf.setFont(f_txt);
+        
+        //Basicamente este boton nos ayudara a accionar el JFileChooser
+        btn_pdf.setFont(f_txt);
+        btn_pdf.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                /*
+                Toda la configuracion del JFILECHOOSER AQUI!!
+                */
+                JFileChooser pdfcho = new JFileChooser();
+                //pdfcho.setFileFilter(new FileTypeFilter(".pdf", "pdf"));
+                pdfcho.setDialogTitle("Buscar archivo pdf");
+                if (pdfcho.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
+                    //EN teoria recuperamos el archivo
+                    pdf = pdfcho.getSelectedFile();
+                    System.out.println(pdf.getAbsolutePath());
+                    btn_pdf.setText("Archivo: " + pdf.getName());
+                }else if(pdfcho.showOpenDialog(main) == JFileChooser.CANCEL_OPTION){
+                    btn_pdf.setText("Elegir archivo");
+                }else if(pdfcho.showOpenDialog(main) == JFileChooser.ERROR_OPTION){
+                    System.out.println("Algo malo debio de haber pasado");
+                    btn_pdf.setText("Elegir archivo");
+                }
+                
+            }
+        });
+        
         pedidos.add(labelLlavePublica);
         pedidos.add(llavepublica);
         pedidos.add(labelPDF);
-        pedidos.add(pdf);
+        pedidos.add(btn_pdf);
         
         botonVerificado.setFont(f_subtit);
         botonVerificado.addActionListener(new ActionListener() {
@@ -107,6 +136,7 @@ class InterfazValidacion extends Thread{
                 synchronized(fdV){
                     try {
                         //de momento no lee pdf ni nada, y un 15 por que si
+                        //Ahora a busvar la manera de enviar los datos del pdf
                         fdV.cargaryverificar(new byte[15], publica);
                         fdV.notify();
                     } catch (RemoteException ex) {
