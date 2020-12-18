@@ -113,7 +113,7 @@ class InterfazValidacion extends Thread{
                     //EN teoria recuperamos el archivo
                     pdf = pdfcho.getSelectedFile();
                     System.out.println(pdf.getAbsolutePath());
-                    btn_pdf.setText("Archivo: " + pdf.getName());
+                    btn_pdf.setText(pdf.getName());
                 }else if(pdfcho.showOpenDialog(main) == JFileChooser.CANCEL_OPTION){
                     btn_pdf.setText("Elegir archivo");
                 }else if(pdfcho.showOpenDialog(main) == JFileChooser.ERROR_OPTION){
