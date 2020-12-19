@@ -23,6 +23,10 @@ public class PDF {
     private String nombre_archivo="";
     private String firma = "";
     
+    private String nombre ="";
+    private String edad   ="";
+    private String mensaje="";
+    
     public PDF(){
         
     }
@@ -31,6 +35,18 @@ public class PDF {
         this.contenido = contenido;
         this.nombre_archivo = nombre_archivo;
         this.firma = firma;
+    }
+    
+    public PDF(String nombre, String edad, String msg,String nombre_archivo,
+            String firma){
+        this.nombre_archivo = nombre_archivo;
+        this.firma = firma;
+        this.nombre = nombre;
+        this.edad = edad;
+        this.mensaje = msg;
+        this.contenido = "Nombre: " + nombre + "\n" + "Edad: " + edad + "\n" 
+                + "Mensaje: " + msg;
+        System.out.println(this.contenido);
     }
     
     public void generarPDF(){
@@ -53,22 +69,14 @@ public class PDF {
     
     public void firmarPDF(){
         try {
-            PdfReader lector = new PdfReader(this.nombre_archivo + ".pdf");
-            // por cada pagina, leeremos su contenido
-            int totalPaginas = lector.getNumberOfPages();
-            for (int iPagina = 1; iPagina <= totalPaginas; iPagina++) {
-                // extraemos el contenido de la pagina
-                this.contenido = PdfTextExtractor.getTextFromPage(lector, iPagina);
-            }
-            this.contenido = this.contenido+this.firma;
-            FileOutputStream file = new FileOutputStream(this.nombre_archivo + ".pdf");
             Document doc = new Document();
-            PdfWriter.getInstance(doc, file);
+            
+            PdfWriter.getInstance(doc, new FileOutputStream(this.nombre_archivo+".pdf"));
             doc.open();
             
-            doc.add(new Paragraph(this.contenido));
+            doc.add(new Paragraph(this.contenido + "\nFirma digital: " + this.firma));
             doc.close();
-            System.out.println("Firmo el archivo");
+            System.out.println("Se firmo el archivo");
         } catch (Exception e) {
             System.out.println("Algo a pasado al abrir el archivo al "
                     + "intentar firmarlo");
@@ -116,6 +124,30 @@ public class PDF {
 
     public void setFirma(String firma) {
         this.firma = firma;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEdad() {
+        return edad;
+    }
+
+    public void setEdad(String edad) {
+        this.edad = edad;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
     
 }

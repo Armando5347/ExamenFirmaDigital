@@ -133,17 +133,17 @@ class InterfazGeneracion extends Thread{
                             mensaje.getText(),
                             CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));
                     mostrarConfirmacion();
-                    
+                    JOptionPane.showMessageDialog(null, "Se elaboro el archivo");
                 } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
                     Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
             private void mostrarConfirmacion() {
+                form.setVisible(false);
                 confirmacion.setVisible(true);
                 confirmacion.repaint();
                 confirmacion.updateUI();
-                
             }
         });
         celdas[3][0] = botonGeneracion;
@@ -170,17 +170,15 @@ class InterfazGeneracion extends Thread{
     private void buildConfirmacion() {
         confirmacion.setBackground(Color.black);
         JLabel tit_conf = new JLabel("Ingresar clave Privada");
-        
+        confirmacion.add(tit_conf);
+        confirmacion.add(confirmarPDF);
         confirmarPDF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 //Aquí es donde ya se manda, por lo que hay que hacer el notify
                 synchronized(fdF){
                     try {
-                        fdF.firmaryguardar(nombre.getText(),
-                                Integer.parseInt(edad.getText()),
-                                mensaje.getText(),
-                                CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));//reemplazar por el .key obtenido
+                        fdF.firmaryguardar(nombre.getText(), Integer.parseInt(edad.getText()),mensaje.getText(),CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));//reemplazar por el .key obtenido
                         fdF.notify();
                     } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException ex) {
                         Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
