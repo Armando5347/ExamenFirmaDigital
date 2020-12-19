@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import logica.FirmaDigital;
 
@@ -45,8 +46,8 @@ public class InterfazServidor extends Thread{
     
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
-    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE), BorderFactory.createEmptyBorder(15, 15, 15, 15));
-    private BorderLayout layout = new BorderLayout(5, 5);
+    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    private BorderLayout layout = new BorderLayout(0, 0);
     
     InterfazServidor(){
         try {
@@ -72,6 +73,8 @@ public class InterfazServidor extends Thread{
         titulo.setFont(f_tit);
         contenedorTitulo.add(titulo);
         contenedorTitulo.setBorder(borde);
+        contenedorTitulo.setBackground(Color.black);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
         buildMain();
         ventana.pack();
@@ -81,7 +84,7 @@ public class InterfazServidor extends Thread{
 
     private void buildMain() {
         acciones.setBackground(Color.black);
-        acciones.setLayout(new BoxLayout(acciones, 20));
+        acciones.setLayout(new BoxLayout(acciones, BoxLayout.X_AXIS));
         acciones.setBorder(bordeCompuesto);
         firmado.setBackground(Color.black);
         firmado.setLayout(new BorderLayout(5, 5));
@@ -96,11 +99,13 @@ public class InterfazServidor extends Thread{
         subtit_Firmado.setBackground(Color.black);
         subtit_Firmado.setForeground(Color.white);
         subtit_Firmado.setFont(f_subtit);
+        subtit_Firmado.setHorizontalAlignment(SwingConstants.CENTER);
         firmado.add(subtit_Firmado, BorderLayout.NORTH);
         
         subtit_Verificado.setBackground(Color.black);
         subtit_Verificado.setForeground(Color.white);
         subtit_Verificado.setFont(f_subtit);
+        subtit_Verificado.setHorizontalAlignment(SwingConstants.CENTER);
         verificados.add(subtit_Verificado, BorderLayout.NORTH);
         
         

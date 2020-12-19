@@ -101,6 +101,7 @@ class InterfazGeneracion extends Thread{
         titulo.setFont(f_tit);
         contenedorTitulo.add(titulo);
         contenedorTitulo.setBorder(borde);
+        contenedorTitulo.setBackground(Color.black);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
         contenedorMain.setBackground(Color.black);
         contenedorMain.setLayout(new BoxLayout(contenedorMain, BoxLayout.Y_AXIS));
