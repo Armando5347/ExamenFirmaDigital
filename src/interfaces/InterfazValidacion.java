@@ -16,7 +16,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +34,7 @@ import logica.InterfazFirmaDigital;
 class InterfazValidacion extends Thread{
     
     InterfazFirmaDigital fdV;
-    
+    Registry reg;
     private JFrame ventana = new JFrame("Validación del pdf");
     
     private PublicKey publica;
@@ -68,8 +72,13 @@ class InterfazValidacion extends Thread{
     private boolean instanciado = false;
 
     InterfazValidacion(PublicKey publica) {
-        this.publica = publica;
-        
+        try {
+            this.publica = publica;
+            reg= LocateRegistry.getRegistry("127.0.0.1",5347);
+            fdV=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
+        } catch (RemoteException | NotBoundException ex) {
+            Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     @Override
     public void run() {

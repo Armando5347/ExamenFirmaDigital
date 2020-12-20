@@ -78,7 +78,7 @@ class InterfazGeneracion extends Thread{
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
     
-    private BorderLayout layout = new BorderLayout(5, 5);
+    private BorderLayout layout = new BorderLayout(0, 0);
     
     private boolean instanciado = false;
     
@@ -147,13 +147,13 @@ class InterfazGeneracion extends Thread{
                 try {
                     name = nombre.getText().replaceAll("\\s", "");
                     CargasLlaves.guardarKey(privada, ("LlavePrivada"+name+".key"));
-                    CargasLlaves.guardarKey(publica, ("LlavePrivada"+name+".key"));
-                    fdF.firmaryguardar(nombre.getText(),
-                            Integer.parseInt(edad.getText()),
-                            mensaje.getText(),
-                            CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));
+                    CargasLlaves.guardarKey(publica, ("LlavePublica"+name+".key"));
+//                    fdF.firmaryguardar(nombre.getText(),
+//                            Integer.parseInt(edad.getText()),
+//                            mensaje.getText(),
+//                            CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));
                     mostrarConfirmacion();
-                } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                } catch (IOException ex) {
                     Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

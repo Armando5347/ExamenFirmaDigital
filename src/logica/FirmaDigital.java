@@ -16,6 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import sun.misc.BASE64Encoder;
 
 
@@ -69,7 +70,7 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             System.out.println("Firma a secas:"+ firmaBytes);
             firmaLegible = new BASE64Encoder().encode(firmaBytes);
             System.out.println("Firma: "+firmaLegible);
-            
+            JOptionPane.showMessageDialog(null, "Se ha firmado un archivo", "Firma realizada", JOptionPane.INFORMATION_MESSAGE);
             instanciaFirmado = true;
         } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,6 +97,8 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             
             validado = firma.verify(firmaBytes);
             verificado = validado;
+            System.out.println("Verificación de la firma digital: "+ validado);
+            JOptionPane.showMessageDialog(null, "Se ha verificado la firma digital del archivo \n El resultado es: "+validado, "Verificación realizada", JOptionPane.INFORMATION_MESSAGE);
             instanciaVerificado = true;
         } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
