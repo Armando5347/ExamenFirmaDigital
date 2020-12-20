@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +31,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import logica.CargasLlaves;
-import logica.FirmaDigital;
 import logica.InterfazFirmaDigital;
 import logica.PDF;
 
@@ -59,11 +61,16 @@ class InterfazGeneracion extends Thread{
     private JLabel labelEdad = new JLabel("Edad:");
     private JLabel labelMensaje = new JLabel("Mensaje:");
     
+    private JButton ingresarPrivada = new JButton("SELECCINAR ARCHIVO");
+    private JLabel labelPrivada = new JLabel("Ingresar su clave privada");
     private JButton confirmarPDF = new JButton("Generar PDF");
     
     private JTextField nombre = new JTextField();
     private JTextField edad = new JTextField();
     private JTextField mensaje = new JTextField();
+    
+    private JFileChooser inputPrivada = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+    private FileNameExtensionFilter filtroLlave = new FileNameExtensionFilter("Solo aceptar llaves", "key");
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
     
@@ -98,6 +105,7 @@ class InterfazGeneracion extends Thread{
         titulo.setFont(f_tit);
         contenedorTitulo.add(titulo);
         contenedorTitulo.setBorder(borde);
+        contenedorTitulo.setBackground(Color.black);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
         contenedorMain.setBackground(Color.black);
         contenedorMain.setLayout(new BoxLayout(contenedorMain, BoxLayout.Y_AXIS));
@@ -109,8 +117,9 @@ class InterfazGeneracion extends Thread{
     }
 
     private void buildForm() {
-        form.setLayout(new GridLayout(4, 2, 20, 30));
+        form.setLayout(new GridLayout(4, 2, 10, 30));
         form.setBackground(Color.black);
+        form.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         Component[][] celdas = new Component[4][2];
         labelNombre.setBackground(Color.black);
         labelNombre.setForeground(Color.white);
@@ -172,9 +181,18 @@ class InterfazGeneracion extends Thread{
 
     private void buildConfirmacion() {
         confirmacion.setBackground(Color.black);
-        JLabel tit_conf = new JLabel("Cargar clave Privada y generar pdf");
-        confirmacion.add(tit_conf);
-        confirmacion.add(confirmarPDF);
+        confirmacion.setLayout(new GridLayout(2, 2, 10, 10));
+        labelPrivada.setBackground(Color.black);
+        labelPrivada.setForeground(Color.white);
+        labelPrivada.setFont(f_subtit);
+        inputPrivada.setDialogTitle("Ingrese la llave privada");
+        inputPrivada.addChoosableFileFilter(filtroLlave);
+        ingresarPrivada.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                //llamar al inputDialog del archivo
+            }
+        });
         confirmarPDF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

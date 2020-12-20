@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import logica.FirmaDigital;
 
@@ -40,14 +41,13 @@ public class InterfazServidor extends Thread{
     JLabel subtit_Firmado = new JLabel("Monitoreo de firmas");
     JLabel subtit_Verificado = new JLabel("Monitoreo de validaciones");
     
-    private Font f_tit = new Font("Verdana", Font.BOLD, 30);
-    private Font f_subtit = new Font("Verdana", Font.BOLD, 25);
-    private Font f_txt = new Font("Verdana", Font.PLAIN, 16);
+    private Font f_tit = new Font("Verdana", Font.BOLD, 50);
+    private Font f_subtit = new Font("Verdana", Font.BOLD, 35);
     
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
-    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.WHITE), BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    private BorderLayout layout = new BorderLayout(5, 5);
+    private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    private BorderLayout layout = new BorderLayout(0, 0);
     
     InterfazServidor(){
         try {
@@ -73,6 +73,8 @@ public class InterfazServidor extends Thread{
         titulo.setFont(f_tit);
         contenedorTitulo.add(titulo);
         contenedorTitulo.setBorder(borde);
+        contenedorTitulo.setBackground(Color.black);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
         buildMain();
         ventana.pack();
@@ -82,8 +84,8 @@ public class InterfazServidor extends Thread{
 
     private void buildMain() {
         acciones.setBackground(Color.black);
-        acciones.setLayout(new BoxLayout(acciones, 5));
-        
+        acciones.setLayout(new BoxLayout(acciones, BoxLayout.X_AXIS));
+        acciones.setBorder(bordeCompuesto);
         firmado.setBackground(Color.black);
         firmado.setLayout(new BorderLayout(5, 5));
         firmado.setBorder(borde);
@@ -97,14 +99,14 @@ public class InterfazServidor extends Thread{
         subtit_Firmado.setBackground(Color.black);
         subtit_Firmado.setForeground(Color.white);
         subtit_Firmado.setFont(f_subtit);
+        subtit_Firmado.setHorizontalAlignment(SwingConstants.CENTER);
         firmado.add(subtit_Firmado, BorderLayout.NORTH);
         
         subtit_Verificado.setBackground(Color.black);
         subtit_Verificado.setForeground(Color.white);
         subtit_Verificado.setFont(f_subtit);
+        subtit_Verificado.setHorizontalAlignment(SwingConstants.CENTER);
         verificados.add(subtit_Verificado, BorderLayout.NORTH);
-        
-        
         
         
         ventana.add(acciones,BorderLayout.CENTER);

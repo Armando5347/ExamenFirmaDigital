@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import logica.FirmaDigital;
 import logica.InterfazFirmaDigital;
 
@@ -48,6 +50,13 @@ class InterfazValidacion extends Thread{
     //private JTextField pdf           = new JTextField();
     private JButton btn_pdf = new JButton("Elegir archivo");
     private File pdf = null;
+    
+    //cosas para ingresar archivos;
+    private JFileChooser inputPublica = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+    private JFileChooser inputPDF = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+    
+    private FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Solo aceptar pdfs", "pdf");
+    private FileNameExtensionFilter filtroLlave = new FileNameExtensionFilter("Solo aceptar llaves", "key");
     
     private JButton botonVerificado = new JButton("Validar pdf");
     
