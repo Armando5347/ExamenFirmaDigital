@@ -17,6 +17,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -63,6 +64,7 @@ class InterfazGeneracion extends Thread{
     
     private JButton ingresarPrivada = new JButton("SELECCINAR ARCHIVO");
     private JLabel labelPrivada = new JLabel("Ingresar su clave privada");
+    private JLabel labelGener = new JLabel("Generar documento");
     private JButton confirmarPDF = new JButton("Generar PDF");
     
     private JTextField nombre = new JTextField();
@@ -79,6 +81,7 @@ class InterfazGeneracion extends Thread{
     private boolean instanciado = false;
     
     private PDF pdf;
+    File private_key;
 
     String name;
     
@@ -185,12 +188,43 @@ class InterfazGeneracion extends Thread{
         labelPrivada.setBackground(Color.black);
         labelPrivada.setForeground(Color.white);
         labelPrivada.setFont(f_subtit);
+        
+        labelGener.setBackground(Color.black);
+        labelGener.setForeground(Color.white);
+        labelGener.setFont(f_subtit);
+        
         inputPrivada.setDialogTitle("Ingrese la llave privada");
         inputPrivada.addChoosableFileFilter(filtroLlave);
+        confirmacion.add(labelPrivada);
+        confirmacion.add(ingresarPrivada);
+        confirmacion.add(labelGener);
+        confirmacion.add(confirmarPDF);
+        
+        confirmarPDF.setEnabled(false);
+        
         ingresarPrivada.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 //llamar al inputDialog del archivo
+                /*
+                Toda la configuracion del JFILECHOOSER AQUI!!
+                */
+                inputPrivada = new JFileChooser();
+                inputPrivada.setFileFilter(new FileNameExtensionFilter("key", "key"));
+                inputPrivada.setDialogTitle("Buscar archivo .key");
+                if (inputPrivada.showOpenDialog(confirmacion) == JFileChooser.APPROVE_OPTION) {
+                    //EN teoria recuperamos el archivo
+                    private_key = inputPrivada.getSelectedFile();
+                    ingresarPrivada.setText(private_key.getName());
+                    confirmarPDF.setEnabled(true);
+                    ingresarPrivada.setEnabled(false);
+                    System.out.println(private_key.getAbsolutePath());
+                }else if(inputPrivada.showOpenDialog(confirmacion) == JFileChooser.CANCEL_OPTION){
+                    ingresarPrivada.setText("Elegir archivo");
+                }else if(inputPrivada.showOpenDialog(confirmacion) == JFileChooser.ERROR_OPTION){
+                    System.out.println("Algo malo debio de haber pasado");
+                    ingresarPrivada.setText("Elegir archivo");
+                }
             }
         });
         confirmarPDF.addActionListener(new ActionListener() {
@@ -199,7 +233,7 @@ class InterfazGeneracion extends Thread{
                 //Aquí es donde ya se manda, por lo que hay que hacer el notify
                 synchronized(fdF){
                     try {
-                        PrivateKey key = CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key"));
+                        PrivateKey key = CargasLlaves.cargarKeyPri(private_key.getName());
                         String firmaLegible = fdF.firmaryguardar(nombre.getText(), 
                                 Integer.parseInt(edad.getText()),
                                 mensaje.getText(),
@@ -215,7 +249,9 @@ class InterfazGeneracion extends Thread{
                         pdf.firmarPDF();
                         pdf.getVariables();
                         fdF.notify();
-                        JOptionPane.showMessageDialog(null,"Se elaboro el PDF con exito",
+                        confirmarPDF.setEnabled(false);
+                        JOptionPane.showMessageDialog(null,"Se elaboro el PDF"
+                                + " con exito",
                                 "Mensaje de aviso", JOptionPane.INFORMATION_MESSAGE);
                     } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException ex) {
                         Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);

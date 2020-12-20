@@ -116,7 +116,7 @@ class InterfazValidacion extends Thread{
                 Toda la configuracion del JFILECHOOSER AQUI!!
                 */
                 JFileChooser pdfcho = new JFileChooser();
-                //pdfcho.setFileFilter(new FileTypeFilter(".pdf", "pdf"));
+                pdfcho.setFileFilter(new FileNameExtensionFilter("pdf", ".pdf"));
                 pdfcho.setDialogTitle("Buscar archivo pdf");
                 if (pdfcho.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
                     //EN teoria recuperamos el archivo
