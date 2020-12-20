@@ -22,7 +22,7 @@ public class InterfazMenu {
     //esto me va generar mis llaves
     private final CargasLlaves parDeLlaves = new CargasLlaves();
     
-    private InterfazGeneracion ig = new InterfazGeneracion(parDeLlaves.getPrivada());
+    private InterfazGeneracion ig = new InterfazGeneracion(parDeLlaves.getPrivada(), parDeLlaves.getPublica());
     private InterfazValidacion iv = new InterfazValidacion(parDeLlaves.getPublica());
     
     private JFrame ventana = new JFrame("Menú principal");
@@ -49,6 +49,7 @@ public class InterfazMenu {
         titulo.setFont(f_tit);
         contenedorTitulo.add(titulo);
         contenedorTitulo.setBorder(borde);
+        contenedorTitulo.setBackground(Color.black);
         ventana.add(contenedorTitulo, BorderLayout.NORTH);
         buildMain();
         ventana.pack();

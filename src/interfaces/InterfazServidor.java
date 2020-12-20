@@ -99,6 +99,7 @@ public class InterfazServidor extends Thread{
         subtit_Firmado.setFont(f_subtit);
         firmado.add(subtit_Firmado, BorderLayout.NORTH);
         statusFirmado.setFont(f_txt);
+        statusFirmado.setEditable(false);
         statusFirmado.setMaximumSize(new Dimension(200,60));
         firmado.add(statusFirmado,BorderLayout.CENTER);
         
@@ -112,8 +113,9 @@ public class InterfazServidor extends Thread{
         subtit_Verificado.setFont(f_subtit);
         firmado.add(subtit_Verificado, BorderLayout.NORTH);
         statusVerificado.setFont(f_txt);
+        statusVerificado.setEditable(false);
         statusVerificado.setMaximumSize(new Dimension(200,60));
-        firmado.add(statusVerificado,BorderLayout.CENTER);
+        verificados.add(statusVerificado,BorderLayout.CENTER);
         acciones.add(verificados);
         
         subtit_Firmado.setBackground(Color.black);

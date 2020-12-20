@@ -49,6 +49,7 @@ class InterfazValidacion extends Thread{
     private JTextField llavepublica  = new JTextField();
     //private JTextField pdf           = new JTextField();
     private JButton btn_pdf = new JButton("Elegir archivo");
+    private JButton btn_public = new JButton("Elegir llave pública");
     private File pdf = null;
     
     //cosas para ingresar archivos;
@@ -133,8 +134,8 @@ class InterfazValidacion extends Thread{
             }
         });
         
-        pedidos.add(labelLlavePublica);
-        pedidos.add(llavepublica);
+        //pedidos.add(labelLlavePublica);
+        //pedidos.add(btn_public);
         pedidos.add(labelPDF);
         pedidos.add(btn_pdf);
         
