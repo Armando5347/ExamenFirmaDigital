@@ -110,10 +110,32 @@ public class PDF {
             PdfReader lector = new PdfReader(this.nombre_archivo + ".pdf");
             // por cada pagina, leeremos su contenido
             int totalPaginas = lector.getNumberOfPages();
+            String text = "";
             for (int iPagina = 1; iPagina <= totalPaginas; iPagina++) {
                 // extraemos el contenido de la pagina
-                System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+                //System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+                text = PdfTextExtractor.getTextFromPage(lector, iPagina);
             }
+                        //Obtenermos las viables que necesitamos
+            System.out.println(text);
+            //Obtenemos la variable nombre
+            this.nombre = text.substring("Nombre: ".length(),
+                    text.indexOf("Edad: ")-1);
+            this.edad = text.substring(text.indexOf("Edad: ") + 
+                    "Edad: ".length(), text.indexOf("Mensaje: ")-1);
+            this.mensaje = text.substring(text.indexOf("Mensaje: ") + 
+                    "Mensaje: ".length(), text.indexOf("Firma digital:")-1);
+            this.firma = text.substring(text.indexOf("Firma digital:") + 
+                    "Firma digital:".length()+1, text.length());
+            //Imprimimos para ver que sea cierto
+            System.out.println(nombre);
+            System.out.println(edad);
+            System.out.println(mensaje);
+            System.out.println(firma);
+            
+            //Ahora si ya podran consultar informacion que necesiten siempre y vuando
+            //este en este formato
+            lector.close();//Para evitar problemas
         }catch(Exception e){
             System.out.println("Fallo al recuperar contenido");
             System.out.println(e.getMessage());
@@ -124,17 +146,77 @@ public class PDF {
     /**
      * Para obtener variables de la clase a la hora de validar pero ahora }
      * con ruta
-     * @param ruta
+     * @param nombre
      */
-    public void getVariables(String ruta){
+    public void getVariables(String nombre){
         try{
-            PdfReader lector = new PdfReader(ruta + ".pdf");
+            PdfReader lector = new PdfReader(nombre + ".pdf");
             // por cada pagina, leeremos su contenido
             int totalPaginas = lector.getNumberOfPages();
+            String text = "";
             for (int iPagina = 1; iPagina <= totalPaginas; iPagina++) {
                 // extraemos el contenido de la pagina
-                System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+                //System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+                text = PdfTextExtractor.getTextFromPage(lector, iPagina);
             }
+            
+            //Obtenemos la variable nombre
+            this.nombre = text.substring("Nombre: ".length(),
+                    text.indexOf("Edad: ")-1);
+            this.edad = text.substring(text.indexOf("Edad: ") + 
+                    "Edad: ".length(), text.indexOf("Mensaje: ")-1);
+            this.mensaje = text.substring(text.indexOf("Mensaje: ") + 
+                    "Mensaje: ".length(), text.indexOf("Firma digital:")-1);
+            this.firma = text.substring(text.indexOf("Firma digital:") + 
+                    "Firma digital:".length()+1, text.length());
+            //Imprimimos para ver que sea cierto
+            System.out.println(nombre);
+            System.out.println(edad);
+            System.out.println(mensaje);
+            System.out.println(firma);
+            
+            lector.close();//Para evitar problemas
+        }catch(Exception e){
+            System.out.println("Fallo al recuperar contenido");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Es exactamente lo mismo pero con ruta
+     * la ruta al final solo debe de ser el nombre de la carpeta
+     * @param nombre nombre del pdf
+     * @param ruta la ruta donde se guarda
+     */
+    public void getVariables(String nombre, String ruta){
+        try{
+            PdfReader lector = new PdfReader(ruta + "/" + nombre + ".pdf");
+            // por cada pagina, leeremos su contenido
+            int totalPaginas = lector.getNumberOfPages();
+            String text = "";
+            for (int iPagina = 1; iPagina <= totalPaginas; iPagina++) {
+                // extraemos el contenido de la pagina
+                //System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+                text = PdfTextExtractor.getTextFromPage(lector, iPagina);
+            }
+            
+            //Obtenemos la variable nombre
+            this.nombre = text.substring("Nombre: ".length(),
+                    text.indexOf("Edad: ")-1);
+            this.edad = text.substring(text.indexOf("Edad: ") + 
+                    "Edad: ".length(), text.indexOf("Mensaje: ")-1);
+            this.mensaje = text.substring(text.indexOf("Mensaje: ") + 
+                    "Mensaje: ".length(), text.indexOf("Firma digital:")-1);
+            this.firma = text.substring(text.indexOf("Firma digital:") + 
+                    "Firma digital:".length()+1, text.length());
+            //Imprimimos para ver que sea cierto
+            System.out.println(this.nombre);
+            System.out.println(edad);
+            System.out.println(mensaje);
+            System.out.println(firma);
+            
+            lector.close();//Para evitar problemas
         }catch(Exception e){
             System.out.println("Fallo al recuperar contenido");
             System.out.println(e.getMessage());
