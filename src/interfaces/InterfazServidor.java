@@ -56,7 +56,7 @@ public class InterfazServidor extends Thread{
     
     InterfazServidor(){
         try {
-            Registry reg=LocateRegistry.createRegistry(5347);
+            Registry reg = LocateRegistry.createRegistry(1099);
             firmaDigital = new FirmaDigital();
             reg.rebind("firmaryguardar",firmaDigital);
                 System.out.println("Va el firmado");
