@@ -7,6 +7,7 @@ package interfaces;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -18,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import logica.FirmaDigital;
@@ -43,7 +45,10 @@ public class InterfazServidor extends Thread{
     
     private Font f_tit = new Font("Verdana", Font.BOLD, 50);
     private Font f_subtit = new Font("Verdana", Font.BOLD, 35);
+    private Font f_txt = new Font("Verdana", Font.BOLD, 25);
     
+    private JTextField statusFirmado = new JTextField("Sin firmar");
+    private JTextField statusVerificado = new JTextField("Sin verificar");
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
     private final Border bordeCompuesto = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3), BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -89,11 +94,28 @@ public class InterfazServidor extends Thread{
         firmado.setBackground(Color.black);
         firmado.setLayout(new BorderLayout(5, 5));
         firmado.setBorder(borde);
+        subtit_Firmado.setBackground(Color.black);
+        subtit_Firmado.setForeground(Color.white);
+        subtit_Firmado.setFont(f_subtit);
+        firmado.add(subtit_Firmado, BorderLayout.NORTH);
+        statusFirmado.setFont(f_txt);
+        statusFirmado.setEditable(false);
+        statusFirmado.setMaximumSize(new Dimension(200,60));
+        firmado.add(statusFirmado,BorderLayout.CENTER);
+        
         acciones.add(firmado);
         
         verificados.setBackground(Color.black);
         verificados.setLayout(new BorderLayout(5, 5));
         verificados.setBorder(borde);
+        subtit_Verificado.setBackground(Color.black);
+        subtit_Verificado.setForeground(Color.white);
+        subtit_Verificado.setFont(f_subtit);
+        firmado.add(subtit_Verificado, BorderLayout.NORTH);
+        statusVerificado.setFont(f_txt);
+        statusVerificado.setEditable(false);
+        statusVerificado.setMaximumSize(new Dimension(200,60));
+        verificados.add(statusVerificado,BorderLayout.CENTER);
         acciones.add(verificados);
         
         subtit_Firmado.setBackground(Color.black);
@@ -134,17 +156,23 @@ public class InterfazServidor extends Thread{
      * Cargar en l ainterfaz una notificación que avise que se aplicó una firma digital
      */
     private void actualizarFirmado() {
+        statusFirmado.setText("Se ha realizado una firma");
+        statusFirmado.repaint();
+        statusFirmado.updateUI();
         firmado.repaint();
-        verificados.repaint();
         firmado.updateUI();
-        verificados.updateUI();
+        
     }
 
     /**
      * Cargar en la aplicación una nitificación que avise que se aplicó una validación de la firma
      */
     private void actualizarVerificado() {
-        
+        statusVerificado.setText("El  verificado fue: "+String.valueOf(firmaDigital.verificado));
+        statusVerificado.repaint();
+        statusVerificado.updateUI();
+        verificados.repaint();
+        verificados.updateUI();
     }
 
 }

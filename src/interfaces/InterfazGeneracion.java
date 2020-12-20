@@ -26,6 +26,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.InvalidKeySpecException;
 import java.util.logging.Level;
@@ -41,6 +42,7 @@ import logica.PDF;
 class InterfazGeneracion extends Thread{
     //elementos de back
     private PrivateKey privada;
+    private PublicKey publica;
     Registry reg;
     InterfazFirmaDigital fdF;
     //elementos de fort
@@ -76,7 +78,7 @@ class InterfazGeneracion extends Thread{
     
     private final Border borde = BorderFactory.createLineBorder(Color.darkGray,3);
     
-    private BorderLayout layout = new BorderLayout(5, 5);
+    private BorderLayout layout = new BorderLayout(0, 0);
     
     private boolean instanciado = false;
     
@@ -85,9 +87,10 @@ class InterfazGeneracion extends Thread{
 
     String name;
     
-    InterfazGeneracion(PrivateKey privada) {
+    InterfazGeneracion(PrivateKey privada, PublicKey publica) {
         try {
             this.privada = privada;
+            this.publica = publica;
             reg= LocateRegistry.getRegistry("127.0.0.1",5347);
             fdF=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
         } catch (RemoteException | NotBoundException ex) {
@@ -144,12 +147,13 @@ class InterfazGeneracion extends Thread{
                 try {
                     name = nombre.getText().replaceAll("\\s", "");
                     CargasLlaves.guardarKey(privada, ("LlavePrivada"+name+".key"));
-                    fdF.firmaryguardar(nombre.getText(),
-                            Integer.parseInt(edad.getText()),
-                            mensaje.getText(),
-                            CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));
+                    CargasLlaves.guardarKey(publica, ("LlavePublica"+name+".key"));
+//                    fdF.firmaryguardar(nombre.getText(),
+//                            Integer.parseInt(edad.getText()),
+//                            mensaje.getText(),
+//                            CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));
                     mostrarConfirmacion();
-                } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+                } catch (IOException ex) {
                     Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -212,18 +216,24 @@ class InterfazGeneracion extends Thread{
                 inputPrivada = new JFileChooser();
                 inputPrivada.setFileFilter(new FileNameExtensionFilter("key", "key"));
                 inputPrivada.setDialogTitle("Buscar archivo .key");
-                if (inputPrivada.showOpenDialog(confirmacion) == JFileChooser.APPROVE_OPTION) {
-                    //EN teoria recuperamos el archivo
-                    private_key = inputPrivada.getSelectedFile();
-                    ingresarPrivada.setText(private_key.getName());
-                    confirmarPDF.setEnabled(true);
-                    ingresarPrivada.setEnabled(false);
-                    System.out.println(private_key.getAbsolutePath());
-                }else if(inputPrivada.showOpenDialog(confirmacion) == JFileChooser.CANCEL_OPTION){
-                    ingresarPrivada.setText("Elegir archivo");
-                }else if(inputPrivada.showOpenDialog(confirmacion) == JFileChooser.ERROR_OPTION){
-                    System.out.println("Algo malo debio de haber pasado");
-                    ingresarPrivada.setText("Elegir archivo");
+                switch (inputPrivada.showOpenDialog(confirmacion)) {
+                    case JFileChooser.APPROVE_OPTION:
+                        //EN teoria recuperamos el archivo
+                        private_key = inputPrivada.getSelectedFile();
+                        ingresarPrivada.setText(private_key.getName());
+                        confirmarPDF.setEnabled(true);
+                        ingresarPrivada.setEnabled(false);
+                        System.out.println(private_key.getAbsolutePath());
+                        break;
+                    case JFileChooser.CANCEL_OPTION:
+                        ingresarPrivada.setText("Elegir archivo");
+                        break;
+                    case JFileChooser.ERROR_OPTION:
+                        System.out.println("Algo malo debio de haber pasado");
+                        ingresarPrivada.setText("Elegir archivo");
+                        break;
+                    default:
+                        break;
                 }
             }
         });
