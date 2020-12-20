@@ -30,6 +30,8 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
     private boolean instanciaFirmado = false;
     private boolean instanciaVerificado = false;
     
+    public boolean verificado = false;
+    
     public FirmaDigital() throws RemoteException{
         super();
         try {
@@ -88,13 +90,12 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
         boolean validado = false;
         try {
             
-            
             firma.initVerify(llavePublica);
             //byte[] new_resumen = null; //aquí insertar la firma digital del pdf
             firma.update(new_resumen);
             
             validado = firma.verify(firmaBytes);
-            
+            verificado = validado;
             instanciaVerificado = true;
         } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);
