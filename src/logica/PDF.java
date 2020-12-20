@@ -101,6 +101,46 @@ public class PDF {
         }
         return this.contenido;
     }
+    
+    /**
+     * Para obtener variables de la clase a la hora de validar
+     */
+    public void getVariables(){
+        try{
+            PdfReader lector = new PdfReader(this.nombre_archivo + ".pdf");
+            // por cada pagina, leeremos su contenido
+            int totalPaginas = lector.getNumberOfPages();
+            for (int iPagina = 1; iPagina <= totalPaginas; iPagina++) {
+                // extraemos el contenido de la pagina
+                System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+            }
+        }catch(Exception e){
+            System.out.println("Fallo al recuperar contenido");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Para obtener variables de la clase a la hora de validar pero ahora }
+     * con ruta
+     * @param ruta
+     */
+    public void getVariables(String ruta){
+        try{
+            PdfReader lector = new PdfReader(ruta + ".pdf");
+            // por cada pagina, leeremos su contenido
+            int totalPaginas = lector.getNumberOfPages();
+            for (int iPagina = 1; iPagina <= totalPaginas; iPagina++) {
+                // extraemos el contenido de la pagina
+                System.out.println(PdfTextExtractor.getTextFromPage(lector, iPagina));;
+            }
+        }catch(Exception e){
+            System.out.println("Fallo al recuperar contenido");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public String getContenido() {
         return contenido;

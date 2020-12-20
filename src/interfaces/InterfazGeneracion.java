@@ -24,6 +24,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.Signature;
 import java.security.spec.InvalidKeySpecException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ import javax.swing.border.Border;
 import logica.CargasLlaves;
 import logica.FirmaDigital;
 import logica.InterfazFirmaDigital;
+import logica.PDF;
 
 class InterfazGeneracion extends Thread{
     //elementos de back
@@ -68,6 +70,8 @@ class InterfazGeneracion extends Thread{
     private BorderLayout layout = new BorderLayout(5, 5);
     
     private boolean instanciado = false;
+    
+    private PDF pdf;
 
     String name;
     
@@ -133,7 +137,6 @@ class InterfazGeneracion extends Thread{
                             mensaje.getText(),
                             CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));
                     mostrarConfirmacion();
-                    JOptionPane.showMessageDialog(null, "Se elaboro el archivo");
                 } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
                     Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -169,7 +172,7 @@ class InterfazGeneracion extends Thread{
 
     private void buildConfirmacion() {
         confirmacion.setBackground(Color.black);
-        JLabel tit_conf = new JLabel("Ingresar clave Privada");
+        JLabel tit_conf = new JLabel("Cargar clave Privada y generar pdf");
         confirmacion.add(tit_conf);
         confirmacion.add(confirmarPDF);
         confirmarPDF.addActionListener(new ActionListener() {
@@ -178,12 +181,29 @@ class InterfazGeneracion extends Thread{
                 //Aquí es donde ya se manda, por lo que hay que hacer el notify
                 synchronized(fdF){
                     try {
-                        fdF.firmaryguardar(nombre.getText(), Integer.parseInt(edad.getText()),mensaje.getText(),CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key")));//reemplazar por el .key obtenido
+                        PrivateKey key = CargasLlaves.cargarKeyPri(("LlavePrivada"+name+".key"));
+                        String firmaLegible = fdF.firmaryguardar(nombre.getText(), 
+                                Integer.parseInt(edad.getText()),
+                                mensaje.getText(),
+                                key);//reemplazar por el .key obtenido
+                        
+                        pdf = new PDF(nombre.getText(), 
+                                String.valueOf(edad.getText()), 
+                                mensaje.getText(),
+                                nombre.getText(),
+                                firmaLegible);
+                        
+                        pdf.generarPDF();
+                        pdf.firmarPDF();
+                        pdf.getVariables();
                         fdF.notify();
+                        JOptionPane.showMessageDialog(null,"Se elaboro el PDF con exito",
+                                "Mensaje de aviso", JOptionPane.INFORMATION_MESSAGE);
                     } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException ex) {
                         Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                
                 
             }
         });

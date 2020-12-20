@@ -68,11 +68,6 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             firmaLegible = new BASE64Encoder().encode(firmaBytes);
             System.out.println("Firma: "+firmaLegible);
             
-            //Parte del PDF
-            PDF pdf = new PDF(nombre, String.valueOf(edad), mensaje, nombre, firmaLegible);
-            pdf.generarPDF();
-            pdf.firmarPDF();
-            
             instanciaFirmado = true;
         } catch (InvalidKeyException | SignatureException ex) {
             Logger.getLogger(FirmaDigital.class.getName()).log(Level.SEVERE, null, ex);

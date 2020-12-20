@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -17,6 +17,10 @@ import java.security.PublicKey;
  */
 public interface InterfazFirmaDigital extends Remote{
     
+    /**
+     *
+     */
+    String firmaLE = ""; 
      /**
      * Esté metodo se encarga de generar el pdf y firmarlo;
      * @param nombre El nombre a guardar.
