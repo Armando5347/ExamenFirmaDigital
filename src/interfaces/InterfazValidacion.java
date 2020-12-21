@@ -85,6 +85,8 @@ class InterfazValidacion extends Thread{
     InterfazValidacion(PublicKey publica) {
         try {
             this.publica = publica;
+            
+            //Bueno aqui simplemente seria cambiar por la ip que necesitamos
             System.setProperty("java.rmi.server.hostname","localhost");
             reg= LocateRegistry.getRegistry("localhost",1099);
             fdV=(InterfazFirmaDigital)reg.lookup("firmaryguardar");

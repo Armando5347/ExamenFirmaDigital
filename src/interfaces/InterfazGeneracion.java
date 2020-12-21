@@ -92,6 +92,7 @@ class InterfazGeneracion extends Thread{
             this.privada = privada;
             this.publica = publica;
             
+            //Bueno aqui simplemente seria cambiar por la ip que necesitamos
             System.setProperty("java.rmi.server.hostname","localhost");
             reg= LocateRegistry.getRegistry("localhost",1099);
             fdF=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
