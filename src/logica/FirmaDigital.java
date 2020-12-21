@@ -10,7 +10,6 @@ package logica;
  * @author maste
  */
 
-import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
@@ -63,6 +62,7 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             firma.initSign(llavePrivada, new SecureRandom());
             
             resumen = (nombre + String.valueOf(edad) + mensaje).getBytes();
+            System.out.println(nombre + String.valueOf(edad) + mensaje);
             System.out.println(resumen);
             firma.update(resumen);
             
@@ -94,8 +94,8 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             firma.initVerify(llavePublica);
             //byte[] new_resumen = null; //aquí insertar la firma digital del pdf
             firma.update(new_resumen);
-            
             validado = firma.verify(firmaBytes);
+            System.out.println(new String(firmaBytes));
             verificado = validado;
             System.out.println("Verificación de la firma digital: "+ validado);
             JOptionPane.showMessageDialog(null, "Se ha verificado la firma digital del archivo \n El resultado es: "+validado, "Verificación realizada", JOptionPane.INFORMATION_MESSAGE);

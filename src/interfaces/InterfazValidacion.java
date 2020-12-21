@@ -15,13 +15,22 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,8 +85,8 @@ class InterfazValidacion extends Thread{
     InterfazValidacion(PublicKey publica) {
         try {
             this.publica = publica;
-            System.setProperty("java.rmi.server.hostname","187.202.60.164");
-            reg= LocateRegistry.getRegistry("187.202.60.164",1099);
+            System.setProperty("java.rmi.server.hostname","localhost");
+            reg= LocateRegistry.getRegistry("localhost",1099);
             fdV=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,8 +155,52 @@ class InterfazValidacion extends Thread{
             }
         });
         
-        //pedidos.add(labelLlavePublica);
-        //pedidos.add(btn_public);
+        btn_public.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                /*
+                Toda la configuracion del JFILECHOOSER AQUI!!
+                */
+                JFileChooser llavecho = new JFileChooser();
+                llavecho.setFileFilter(filtroLlave);
+                llavecho.setDialogTitle("Buscar archivo key");
+                if (llavecho.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
+                    //EN teoria recuperamos el archivo
+                    File llave = llavecho.getSelectedFile();
+                    FileInputStream fis;
+                    try {
+                        fis = new FileInputStream(llave);
+                        DataInputStream dis = new DataInputStream(fis);
+                        byte[] keyBytes = new byte[(int) llave.length()];
+                        dis.readFully(keyBytes);
+                        dis.close();
+                        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+                        KeyFactory kf = KeyFactory.getInstance("RSA");
+                        publica = kf.generatePublic(spec);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvalidKeySpecException ex) {
+                        Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //String a = llavecho.getSelectedFile().;
+                    //System.out.println(pdf.getAbsolutePath());
+                    btn_public.setText(llave.getName());
+                }else if(llavecho.showOpenDialog(main) == JFileChooser.CANCEL_OPTION){
+                    btn_public.setText("Elegir archivo");
+                }else if(llavecho.showOpenDialog(main) == JFileChooser.ERROR_OPTION){
+                    System.out.println("Algo malo debio de haber pasado");
+                    btn_public.setText("Elegir archivo");
+                }
+                
+            }
+        });
+        
+        pedidos.add(labelLlavePublica);
+        pedidos.add(btn_public);
         pedidos.add(labelPDF);
         pedidos.add(btn_pdf);
         
