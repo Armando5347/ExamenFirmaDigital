@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -163,6 +164,10 @@ class InterfazValidacion extends Thread{
                         pdf_by.getVariables(pdf.getName());
                         String resumen = pdf_by.getNombre() + pdf_by.getEdad() 
                                 + pdf_by.getMensaje();
+                        System.out.println(resumen);
+                        System.out.println("Longitud del String: "+ resumen.length());
+                        byte[] arr = resumen.getBytes();
+                        System.out.println(Arrays.toString(arr));
                         ok = fdV.cargaryverificar(resumen.getBytes() , publica);
                         fdV.notify();
                     } catch (RemoteException ex) {

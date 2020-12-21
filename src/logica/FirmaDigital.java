@@ -63,7 +63,7 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             firma.initSign(llavePrivada, new SecureRandom());
             
             resumen = (nombre + String.valueOf(edad) + mensaje).getBytes();
-            
+            System.out.println(resumen);
             firma.update(resumen);
             
             firmaBytes = firma.sign();
