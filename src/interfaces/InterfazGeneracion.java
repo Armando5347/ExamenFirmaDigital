@@ -91,7 +91,7 @@ class InterfazGeneracion extends Thread{
         try {
             this.privada = privada;
             this.publica = publica;
-            reg= LocateRegistry.getRegistry("127.0.0.1",5347);
+            reg= LocateRegistry.getRegistry("187.145.140.37",1099);
             fdF=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);

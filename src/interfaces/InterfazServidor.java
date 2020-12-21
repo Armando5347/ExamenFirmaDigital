@@ -9,9 +9,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMIClientSocketFactory;
+import java.rmi.server.RMIServerSocketFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -56,7 +61,8 @@ public class InterfazServidor extends Thread{
     
     InterfazServidor(){
         try {
-            Registry reg=LocateRegistry.createRegistry(5347);
+            System.setProperty("java.rmi.server.hostname","187.202.60.164");
+            Registry reg=LocateRegistry.createRegistry(1099);
             firmaDigital = new FirmaDigital();
             reg.rebind("firmaryguardar",firmaDigital);
                 System.out.println("Va el firmado");
