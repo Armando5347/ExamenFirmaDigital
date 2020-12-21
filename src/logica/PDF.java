@@ -150,7 +150,7 @@ public class PDF {
      */
     public void getVariables(String nombre){
         try{
-            PdfReader lector = new PdfReader(nombre + ".pdf");
+            PdfReader lector = new PdfReader(nombre);
             // por cada pagina, leeremos su contenido
             int totalPaginas = lector.getNumberOfPages();
             String text = "";

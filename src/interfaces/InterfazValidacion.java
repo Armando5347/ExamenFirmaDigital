@@ -30,6 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import logica.FirmaDigital;
 import logica.InterfazFirmaDigital;
+import logica.PDF;
 
 class InterfazValidacion extends Thread{
     
@@ -127,7 +128,7 @@ class InterfazValidacion extends Thread{
                 Toda la configuracion del JFILECHOOSER AQUI!!
                 */
                 JFileChooser pdfcho = new JFileChooser();
-                pdfcho.setFileFilter(new FileNameExtensionFilter("pdf", ".pdf"));
+                pdfcho.setFileFilter(filtroPDF);
                 pdfcho.setDialogTitle("Buscar archivo pdf");
                 if (pdfcho.showOpenDialog(main) == JFileChooser.APPROVE_OPTION) {
                     //EN teoria recuperamos el archivo
@@ -153,17 +154,30 @@ class InterfazValidacion extends Thread{
         botonVerificado.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                boolean ok = false;
                 synchronized(fdV){
                     try {
                         //de momento no lee pdf ni nada, y un 15 por que si
                         //Ahora a busvar la manera de enviar los datos del pdf
-                        fdV.cargaryverificar(new byte[15], publica);
+                        PDF pdf_by = new PDF();
+                        pdf_by.getVariables(pdf.getName());
+                        String resumen = pdf_by.getNombre() + pdf_by.getEdad() 
+                                + pdf_by.getMensaje();
+                        ok = fdV.cargaryverificar(resumen.getBytes() , publica);
                         fdV.notify();
                     } catch (RemoteException ex) {
                         Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                
+                if (ok) {
+                    JOptionPane.showMessageDialog(null,"Se valido el archivo pdf"
+                    + " con credenciales correctas",
+                    "Mensaje de aviso", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(null,"El archivo ha sido "
+                            + "modificado, se esta llamando a la policia",
+                    "Mensaje de advertencia", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
         
