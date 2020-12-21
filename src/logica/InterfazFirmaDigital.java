@@ -34,10 +34,12 @@ public interface InterfazFirmaDigital extends Remote{
     
     /**
      * Metodo para ingresar el pdf y la llave pública del cliente para validar si este pdf es autentico.
-     * @param new_Resumen los bits de la firma digitalq ue el pdf ya leyó
+     * @param nombre nobmre recibido del pdf
+     * @param edad edad recibida del pdf
+     * @param mensaje mensaje recibido del psf
      * @param llavePublica la llave pública del cliente
      * @return true si el pdf es autentico, false de no serlo.
      * @throws java.rmi.RemoteException Si un error en del objeto remoto ocurre
      */
-    public boolean cargaryverificar(byte[] new_Resumen, PublicKey llavePublica) throws RemoteException;
+    public boolean cargaryverificar(String nombre, int edad, String mensaje, PublicKey llavePublica) throws RemoteException;
 }

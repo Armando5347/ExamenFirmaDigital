@@ -215,13 +215,16 @@ class InterfazValidacion extends Thread{
                         //Ahora a busvar la manera de enviar los datos del pdf
                         PDF pdf_by = new PDF();
                         pdf_by.getVariables(pdf.getName());
-                        String resumen = pdf_by.getNombre() + pdf_by.getEdad() 
-                                + pdf_by.getMensaje();
+                        /*
                         System.out.println(resumen);
                         System.out.println("Longitud del String: "+ resumen.length());
                         byte[] arr = resumen.getBytes();
-                        System.out.println(Arrays.toString(arr));
-                        ok = fdV.cargaryverificar(resumen.getBytes() , publica);
+                        System.out.println(Arrays.toString(arr));*/
+                        
+                        ok = fdV.cargaryverificar(pdf_by.getNombre(), 
+                                Integer.parseInt(pdf_by.getEdad()), 
+                                pdf_by.getMensaje(), 
+                                publica);
                         fdV.notify();
                     } catch (RemoteException ex) {
                         Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
