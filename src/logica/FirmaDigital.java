@@ -14,6 +14,7 @@ import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -27,7 +28,9 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
     Signature firma;
     byte[] resumen;
     byte[] firmaBytes;
+    PrivateKey buffPrivate;
     
+    SecureRandom random = new SecureRandom();
     private boolean instanciaFirmado = false;
     private boolean instanciaVerificado = false;
     
@@ -60,12 +63,15 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
     public String firmaryguardar(String nombre, int edad, String mensaje, PrivateKey llavePrivada){
         String firmaLegible = "";
         try {
-            firma.initSign(llavePrivada, new SecureRandom());
-            
+            firma.initSign(llavePrivada, random);
+            buffPrivate = llavePrivada;
             resumen = (nombre + String.valueOf(edad) + mensaje).getBytes();
-            
+            System.out.println("Mensaje:" +(nombre + String.valueOf(edad) + mensaje));
+            System.out.println("Longitud cadena: "+ (nombre + String.valueOf(edad) + mensaje).length());
             firma.update(resumen);
+            System.out.println("Mensaje en bytes juntitos: " +resumen);
             
+            System.out.println("Mensjae con Array.toStirng: "+ Arrays.toString(resumen));
             firmaBytes = firma.sign();
             System.out.println("Firma a secas:"+ firmaBytes);
             firmaLegible = new BASE64Encoder().encode(firmaBytes);
@@ -82,17 +88,20 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
     
     /**
      * Metodo para ingresar el pdf y la llave pública del cliente para validar si este pdf es autentico.
-     * @param pdf El pdf a comparar
+     * @param new_resumen: los bytes del resumen con los que se valida la firma
      * @param llavePublica la llave pública del cliente
      * @return true si el pdf es autentico, false de no serlo.
      */
     @Override
-    public boolean cargaryverificar(byte[] new_resumen, PublicKey llavePublica){
+    public boolean cargaryverificar(String nombre, int edad, String mensaje, PublicKey llavePublica){
         boolean validado = false;
         try {
-            
+            byte[] new_resumen = (nombre + String.valueOf(edad) + mensaje).getBytes();
+            System.out.println("New resumen junto: "+ new_resumen);
+            System.out.println("New resumen Arrays.toString: "+ Arrays.toString(new_resumen));
+           
             firma.initVerify(llavePublica);
-            //byte[] new_resumen = null; //aquí insertar la firma digital del pdf
+            //byte[] new_resumen = null; //aq(firmaBytesuí insertar la firma digital del pdf
             firma.update(new_resumen);
             
             validado = firma.verify(firmaBytes);
