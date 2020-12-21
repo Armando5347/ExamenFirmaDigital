@@ -91,7 +91,9 @@ class InterfazGeneracion extends Thread{
         try {
             this.privada = privada;
             this.publica = publica;
-            reg= LocateRegistry.getRegistry("187.145.140.37",1099);
+            
+            System.setProperty("java.rmi.server.hostname","187.202.60.164");
+            reg= LocateRegistry.getRegistry("187.202.60.164",1099);
             fdF=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(InterfazGeneracion.class.getName()).log(Level.SEVERE, null, ex);
@@ -256,7 +258,7 @@ class InterfazGeneracion extends Thread{
                                 firmaLegible);
                         
                         pdf.generarPDF();
-                        pdf.firmarPDF();
+                        pdf.firmarPDF(); 
                         pdf.getVariables();
                         fdF.notify();
                         confirmarPDF.setEnabled(false);

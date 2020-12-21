@@ -74,7 +74,8 @@ class InterfazValidacion extends Thread{
     InterfazValidacion(PublicKey publica) {
         try {
             this.publica = publica;
-            reg= LocateRegistry.getRegistry("187.145.140.37",1099);
+            System.setProperty("java.rmi.server.hostname","187.202.60.164");
+            reg= LocateRegistry.getRegistry("187.202.60.164",1099);
             fdV=(InterfazFirmaDigital)reg.lookup("firmaryguardar");
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(InterfazValidacion.class.getName()).log(Level.SEVERE, null, ex);
