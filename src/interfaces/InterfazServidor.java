@@ -56,7 +56,7 @@ public class InterfazServidor extends Thread{
     
     InterfazServidor(){
         try {
-            System.setProperty("java.rmi.server.hostname","187.202.60.164");
+            System.setProperty("java.rmi.server.hostname","localhost");
             Registry reg = LocateRegistry.createRegistry(1099);
             firmaDigital = new FirmaDigital();
             reg.rebind("firmaryguardar",firmaDigital);
