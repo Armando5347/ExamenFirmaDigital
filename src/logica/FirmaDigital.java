@@ -65,12 +65,12 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
             firma.initSign(llavePrivada, random);
             buffPrivate = llavePrivada;
             resumen = (nombre + String.valueOf(edad) + mensaje).getBytes();
-            System.out.println("Mensaje:" +(nombre + String.valueOf(edad) + mensaje));
-            System.out.println("Longitud cadena: "+ (nombre + String.valueOf(edad) + mensaje).length());
+            //System.out.println("Mensaje:" +(nombre + String.valueOf(edad) + mensaje));
+            //System.out.println("Longitud cadena: "+ (nombre + String.valueOf(edad) + mensaje).length());
             firma.update(resumen);
-            System.out.println("Mensaje en bytes juntitos: " +resumen);
+            //System.out.println("Mensaje en bytes juntitos: " +resumen);
             
-            System.out.println("Mensjae con Array.toStirng: "+ Arrays.toString(resumen));
+            //System.out.println("Mensjae con Array.toStirng: "+ Arrays.toString(resumen));
             firmaBytes = firma.sign();
             System.out.println("Firma a secas:"+ firmaBytes);
             firmaLegible = new BASE64Encoder().encode(firmaBytes);
@@ -96,8 +96,8 @@ public class FirmaDigital extends UnicastRemoteObject implements InterfazFirmaDi
         boolean validado = false;
         try {
             byte[] new_resumen = (nombre + String.valueOf(edad) + mensaje).getBytes();
-            System.out.println("New resumen junto: "+ new_resumen);
-            System.out.println("New resumen Arrays.toString: "+ Arrays.toString(new_resumen));
+            //System.out.println("New resumen junto: "+ new_resumen);
+            //System.out.println("New resumen Arrays.toString: "+ Arrays.toString(new_resumen));
            
             firma.initVerify(llavePublica);
             //byte[] new_resumen = null; //aq(firmaBytesuí insertar la firma digital del pdf
